@@ -1,3 +1,7 @@
+<form>
+	<input type="text" id="text" name="text" value="Hello World">
+	<button onclick="speak(this.parentElement.getElementById('text').value)">Speak</button>
+</form>
 <script>
 async function speak(text, language='en') {
 const response = await fetch('/api/v1/speak/', {
@@ -20,6 +24,4 @@ audioEl.play();
 
 return audioEl
 }
-
-speak('Hello World!')
 </script>
