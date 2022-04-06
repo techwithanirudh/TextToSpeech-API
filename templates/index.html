@@ -1,13 +1,13 @@
 <script>
+async function speak(text, language='en') {
 const response = await fetch('/api/v1/speak/', {
     method: "POST",
     headers: {
         'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-        text: `Hello World
-   Test Data`,
-        language: 'en'
+        text: text,
+        language: language
     })
 });
 
@@ -17,4 +17,9 @@ const audioUrl = window.URL.createObjectURL(audioBlob);
 const audioEl = document.createElement('audio');
 audioEl.src = audioUrl;
 audioEl.play();
+
+return audioEl
+}
+
+speak('Hello World!')
 </script>
