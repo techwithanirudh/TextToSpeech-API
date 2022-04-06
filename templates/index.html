@@ -1,0 +1,20 @@
+<script>
+const response = await fetch('/api/v1/speak/', {
+    method: "POST",
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+        text: `Hello World
+   Test Data`,
+        language: 'en'
+    })
+});
+
+const audioBlob = await response.blob();
+const audioUrl = window.URL.createObjectURL(audioBlob);
+
+const audioEl = document.createElement('audio');
+audioEl.src = audioUrl;
+audioEl.play();
+</script>
