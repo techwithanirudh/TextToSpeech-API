@@ -1,6 +1,6 @@
 <form>
 	<input type="text" id="text" name="text" value="Hello World">
-	<button onclick="event.preventDefault(); speak(this.parentElement.getElementById('text').value)">Speak</button>
+	<button onclick="event.preventDefault(); speak(this.parentElement.querySelector(`input#text[name='text']`).value)">Speak</button>
 </form>
 <script>
 async function speak(text, language='en') {
