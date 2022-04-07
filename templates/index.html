@@ -2,26 +2,73 @@
 	<input type="text" id="text" name="text" value="Hello World">
 	<button onclick="event.preventDefault(); speak(this.parentElement.querySelector(`input#text[name='text']`).value)">Speak</button>
 </form>
-<script>
-async function speak(text, language='en') {
-const response = await fetch('/api/v1/speak/', {
-    method: "POST",
-    headers: {
-        'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-        text: text,
-        language: language
-    })
-});
+<script defer>
+	// async function speak(text, language='en') {
+	// 	const response = await fetch('/api/v1/speak/', {
+	// 	    method: "POST",
+	// 	    headers: {
+	// 	        'Content-Type': 'application/json'
+	// 	    },
+	// 	    body: JSON.stringify({
+	// 	        text: text,
+	// 	        language: language
+	// 	    })
+	// 	});
+		
+	// 	const audioBlob = await response.blob();
+	// 	const audioUrl = window.URL.createObjectURL(audioBlob);
+		
+	// 	const audioEl = document.createElement('audio');
+	// 	audioEl.src = audioUrl;
+	// 	audioEl.play();
+		
+	// 	return audioEl
+	// }
+	
+	class Speech {
+		constructor(language) {
+	    	this.language = 'en';
+			this.speaking = false; 
+			this.paused = false; 
+			this.audio = null; 
+		}
+	  	
+		async speak(text) {
+			const self = this;
+  	  		const response = await fetch('/api/v1/speak/', {
+			    method: "POST",
+			    headers: {
+			        'Content-Type': 'application/json'
+			    },
+			    body: JSON.stringify({
+			        text: text,
+			        language: this.language,
+			    })
+			});
+		
+			const audioBlob = await response.blob();
+			const audioUrl = window.URL.createObjectURL(audioBlob);
 
-const audioBlob = await response.blob();
-const audioUrl = window.URL.createObjectURL(audioBlob);
+			const audio = document.createElement('audio');
+			this.audio = audio;
+	
+			audio.src = audioUrl;
+			audio.play();
 
-const audioEl = document.createElement('audio');
-audioEl.src = audioUrl;
-audioEl.play();
+			this.speaking = true; 
 
-return audioEl
-}
+			audio.onended = function() { self.speaking = false }
+		
+			return this.audio;
+		}
+	  	
+		cancel() {
+			this.audio.pause();
+            this.audio.remove();
+		}
+	}
+
+	window.talker = new Speech()
+	talker.speak('abcdefghijklmnopqrstuvwqyz')
+	talker.speak('abcdefghijklmnopqrstuvwqyz')
 </script>

@@ -5,8 +5,14 @@ from werkzeug.utils import secure_filename
 from gtts import gTTS
 from uuid import uuid4
 
+import os, shutil
+
 app = Flask(__name__)
 CORS(app)
+
+if os.path.isdir('./files'):
+	shutil.rmtree('./files')
+os.mkdir('./files')
 
 @app.route('/')
 def index():
