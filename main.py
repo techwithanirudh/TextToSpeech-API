@@ -10,6 +10,8 @@ import os, shutil
 app = Flask(__name__)
 CORS(app)
 
+app.config['CUSTOM_STATIC_PATH'] = './static'
+
 if os.path.isdir('./files'):
 	shutil.rmtree('./files')
 os.mkdir('./files')
@@ -43,4 +45,8 @@ def read():
 	elif request.method == 'GET':  
 		return redirect('/')
 
+@app.route('/static/<path:filename>')
+def custom_static(filename):
+    return send_from_directory(app.config['CUSTOM_STATIC_PATH'], filename)
+	
 app.run(host='0.0.0.0', port=8080)

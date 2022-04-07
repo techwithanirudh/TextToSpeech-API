@@ -1,133 +1,49 @@
-<form>
-	<input type="text" id="text" name="text" value="Hello World">
-	<button onclick="event.preventDefault(); talker.speak(this.parentElement.querySelector(`input#text[name='text']`).value)">Speak</button>
-</form>
-<script defer>
-	// async function speak(text, language='en') {
-	// 	const response = await fetch('/api/v1/speak/', {
-	// 	    method: "POST",
-	// 	    headers: {
-	// 	        'Content-Type': 'application/json'
-	// 	    },
-	// 	    body: JSON.stringify({
-	// 	        text: text,
-	// 	        language: language
-	// 	    })
-	// 	});
-		
-	// 	const audioBlob = await response.blob();
-	// 	const audioUrl = window.URL.createObjectURL(audioBlob);
-		
-	// 	const audioEl = document.createElement('audio');
-	// 	audioEl.src = audioUrl;
-	// 	audioEl.play();
-		
-	// 	return audioEl
-	// }
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AniSpeech</title>
+    <link rel="stylesheet" href="static/main.css" />
+    <link rel="stylesheet" href="static/speech.css" />
 
-	class SpeechVoice {
-		constructor({_default, language, localService, name, voiceURI}) {
-			this.default = _default;
-			this.lang = language;
-			this.localService = localService;
-			this.name = name;
-			this.voiceURI = voiceURI; 
-		}
-	}
-	
-	class Speech {
-		constructor(language) {
-	    	this.language = 'en';
-			this.languages = {"af":"Afrikaans","ar":"Arabic","bg":"Bulgarian","bn":"Bengali","bs":"Bosnian","ca":"Catalan","cs":"Czech","cy":"Welsh","da":"Danish","de":"German","el":"Greek","en":"English","eo":"Esperanto","es":"Spanish","et":"Estonian","fi":"Finnish","fr":"French","gu":"Gujarati","hi":"Hindi","hr":"Croatian","hu":"Hungarian","hy":"Armenian","id":"Indonesian","is":"Icelandic","it":"Italian","iw":"Hebrew","ja":"Japanese","jw":"Javanese","km":"Khmer","kn":"Kannada","ko":"Korean","la":"Latin","lv":"Latvian","mk":"Macedonian","ml":"Malayalam","mr":"Marathi","ms":"Malay","my":"Myanmar (Burmese)","ne":"Nepali","nl":"Dutch","no":"Norwegian","pl":"Polish","pt":"Portuguese","ro":"Romanian","ru":"Russian","si":"Sinhala","sk":"Slovak","sq":"Albanian","sr":"Serbian","su":"Sundanese","sv":"Swedish","sw":"Swahili","ta":"Tamil","te":"Telugu","th":"Thai","tl":"Filipino","tr":"Turkish","uk":"Ukrainian","ur":"Urdu","vi":"Vietnamese","zh-CN":"Chinese"};
-			this.getLanguages()
-			this.pending = false; 
-			this.speaking = false; 
-			this.paused = false; 
-			this.audio = null; 
-		}
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+  </head>
 
-		async getLanguages() {
-			var languages = await fetch('/api/v1/languages/') 
-			languages = await languages.json()
+  <body class="m-2">
+    <form>
+      <div class="mb-3">
+        <label for="text" class="form-label">Text</label>
+        <input
+          type="text"
+          class="form-control"
+          id="text"
+          name="text"
+          aria-describedby="text"
+        />
+        <div id="text" class="form-text">The text for AniSpeech to speak</div>
+      </div>
+      <button name="speak" id="speak" class="btn btn-primary">Speak</button>
+    </form>
 
-			this.languages = languages
-			
-			return languages
-		}
+    <script src="static/main.js"></script>
+    <script src="static/speech.js"></script>
 
-		getName(language) {
-			language = this.languages[language]
-			const name = `Google Speech Online ${language}`
-
-			return name
-		}
-		
-		getVoices() {
-			var languages = Object.keys(this.languages)
-
-			var voices = []
-
-			languages.forEach(language => {
-				var _default = false
-				var lang = language
-				var localService = false
-				var name = this.getName(language)
-				var voiceURI = this.getName(language)
-				
-				if (language === 'en') var _default = true
-
-				var voice = { _default: _default, language: language, localService: localService, name: name, voiceURI: voiceURI }
-				voices.push(new SpeechVoice(voice))
-			})
-			
-			return voices
-		}
-		
-		
-		async speak(text) {
-			const self = this;
-  	  		const response = await fetch('/api/v1/speak/', {
-			    method: "POST",
-			    headers: {
-			        'Content-Type': 'application/json'
-			    },
-			    body: JSON.stringify({
-			        text: text,
-			        language: this.language,
-			    })
-			});
-		
-			const audioBlob = await response.blob();
-			const audioUrl = window.URL.createObjectURL(audioBlob);
-
-			const audio = document.createElement('audio');
-			this.audio = audio;
-	
-			audio.src = audioUrl;
-			audio.play();
-
-			this.speaking = true; 
-
-			audio.onended = function() { self.speaking = false }
-		
-			return this.audio;
-		}
-
-
-		pause() {
-			this.audio.pause();
-		}
-
-		resume() {
-			this.audio.play();
-		}
-		
-		cancel() {
-			this.audio.pause();
-            this.audio.remove();
-		}
-	}
-
-	window.talker = new Speech();
-	console.log(talker.getVoices())
-</script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+      integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+      integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
