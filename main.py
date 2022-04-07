@@ -2,7 +2,7 @@ from flask import *
 from flask_cors import CORS
 
 from werkzeug.utils import secure_filename
-from gtts import gTTS
+from gtts import gTTS, langs
 from uuid import uuid4
 
 import os, shutil
@@ -17,6 +17,11 @@ os.mkdir('./files')
 @app.route('/')
 def index():
   	return render_template('index.html')
+
+@app.route('/api/v1/languages')
+def languages():
+	supportedLanguages = langs._main_langs()
+	return supportedLanguages
 
 @app.route('/api/v1/speak/', methods=['GET', 'POST'])
 def read():

@@ -34,8 +34,11 @@
 			this.audio = null; 
 		}
 
-		getVoices() {
-			return 
+		async getLanguages() {
+			var languages = await fetch('/api/v1/languages/') 
+			languages = await languages.json()
+
+			return languages
 		}
 		
 		async speak(text) {
