@@ -40,6 +40,22 @@
 
 			return languages
 		}
+
+		getName(language) {
+			const languages = await getLanguages()
+			const langauge = languages[langauge]
+			const name = `Google Speech Online ${langauge}`
+
+			return name
+		}
+		
+		async getVoices() {
+			var languages = await getLanguages()
+			languages = Object.keys(languages)
+			
+			return languages
+		}
+		
 		
 		async speak(text) {
 			const self = this;
