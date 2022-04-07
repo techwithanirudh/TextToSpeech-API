@@ -28,11 +28,16 @@
 	class Speech {
 		constructor(language) {
 	    	this.language = 'en';
+			this.pending = false; 
 			this.speaking = false; 
 			this.paused = false; 
 			this.audio = null; 
 		}
-	  	
+
+		getVoices() {
+			return 
+		}
+		
 		async speak(text) {
 			const self = this;
   	  		const response = await fetch('/api/v1/speak/', {
@@ -67,7 +72,7 @@
 			this.audio.pause();
 		}
 
-		play() {
+		resume() {
 			this.audio.play();
 		}
 		

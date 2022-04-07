@@ -26,8 +26,12 @@ def read():
 		
 		text = request_data['text'] or 'Hello World!'
 		language = request_data['language'] or 'en'
-		
-		ttsEngine = gTTS(text=text, lang=language, slow=False)
+
+		try:
+			ttsEngine = gTTS(text=text, lang=language, slow=False)
+		except ValueError:
+			return "Language not supported: " + language
+	
 		ttsEngine.save(filename)
 
 		return send_file(filename, mimetype='audio/mp3')
