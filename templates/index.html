@@ -24,6 +24,16 @@
 		
 	// 	return audioEl
 	// }
+
+	class SpeechVoice {
+		constructor({_default, language, localService, name, voiceURI}) {
+	    	this.name = name;
+			this.lang = language;
+			this.localService = localService;
+			this.name = name;
+			this.voiceURI = voiceURI; 
+		}
+	}
 	
 	class Speech {
 		constructor(language) {
@@ -45,7 +55,7 @@
 			return languages
 		}
 
-		async getName(language) {
+		getName(language) {
 			language = this.languages[language]
 			const name = `Google Speech Online ${language}`
 
@@ -67,7 +77,7 @@
 				if (language === 'en') var _default = true
 
 				var voice = { default: _default, lang: language, localService: localService, name: name, voiceURI: voiceURI }
-				voices.push(voice)
+				voices.push(SpeechVoice(voice))
 			})
 			
 			return voices
