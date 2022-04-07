@@ -43,8 +43,8 @@
 
 		async getName(language) {
 			const languages = await this.getLanguages()
-			const langauge = languages[langauge]
-			const name = `Google Speech Online ${langauge}`
+			language = languages[language]
+			const name = `Google Speech Online ${language}`
 
 			return name
 		}
