@@ -27,7 +27,7 @@
 
 	class SpeechVoice {
 		constructor({_default, language, localService, name, voiceURI}) {
-	    	this.name = name;
+			this.default = _default;
 			this.lang = language;
 			this.localService = localService;
 			this.name = name;
@@ -76,8 +76,8 @@
 				
 				if (language === 'en') var _default = true
 
-				var voice = { default: _default, lang: language, localService: localService, name: name, voiceURI: voiceURI }
-				voices.push(SpeechVoice(voice))
+				var voice = { _default: _default, language: language, localService: localService, name: name, voiceURI: voiceURI }
+				voices.push(new SpeechVoice(voice))
 			})
 			
 			return voices
@@ -128,5 +128,6 @@
 		}
 	}
 
-	window.talker = new Speech()
+	window.talker = new Speech();
+	console.log(talker.getVoices())
 </script>
