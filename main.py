@@ -18,7 +18,7 @@ os.mkdir('./files')
 def index():
   	return render_template('index.html')
 
-@app.route('/api/v1/languages')
+@app.route('/api/v1/languages/')
 def languages():
 	supportedLanguages = langs._main_langs()
 	return supportedLanguages
