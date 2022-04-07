@@ -61,7 +61,16 @@
 		
 			return this.audio;
 		}
-	  	
+
+
+		pause() {
+			this.audio.pause();
+		}
+
+		play() {
+			this.audio.play();
+		}
+		
 		cancel() {
 			this.audio.pause();
             this.audio.remove();
