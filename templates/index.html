@@ -55,12 +55,12 @@
 
 			var voices = []
 
-			languages.forEach(language => {
+			languages.forEach(async language => {
 				var _default = false
 				var lang = language
 				var localService = false
-				var name = getName(language)
-				var voiceURI = getName(language)
+				var name = await this.getName(language)
+				var voiceURI = await this.getName(language)
 				
 				if (language === 'en') var _default = true
 
