@@ -28,6 +28,8 @@
 	class Speech {
 		constructor(language) {
 	    	this.language = 'en';
+			this.languages = {'en': 'English'};
+			this.getLanguages()
 			this.pending = false; 
 			this.speaking = false; 
 			this.paused = false; 
@@ -38,29 +40,29 @@
 			var languages = await fetch('/api/v1/languages/') 
 			languages = await languages.json()
 
+			this.languages = languages
+			
 			return languages
 		}
 
 		async getName(language) {
-			const languages = await this.getLanguages()
-			language = languages[language]
+			language = this.languages[language]
 			const name = `Google Speech Online ${language}`
 
 			return name
 		}
 		
-		async getVoices() {
-			var languages = await this.getLanguages()
-			languages = Object.keys(languages)
+		getVoices() {
+			var languages = Object.keys(this.languages)
 
 			var voices = []
 
-			languages.forEach(async language => {
+			languages.forEach(language => {
 				var _default = false
 				var lang = language
 				var localService = false
-				var name = await this.getName(language)
-				var voiceURI = await this.getName(language)
+				var name = this.getName(language)
+				var voiceURI = this.getName(language)
 				
 				if (language === 'en') var _default = true
 
