@@ -1,7 +1,7 @@
 window.talker = new AniSpeech();
 
-document.getElementById("speak").addEventListnener("click", function (event) {
+document.querySelector('button#speak[name="speak"]').addEventListener("click", function (event) {
   event.preventDefault();
-  var text = document.getElementById("input#text[name='text']").value;
+  var text = document.querySelector('input#text[name="text"]').value;
   talker.speak(text);
 });
