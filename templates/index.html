@@ -52,8 +52,23 @@
 		async getVoices() {
 			var languages = await this.getLanguages()
 			languages = Object.keys(languages)
+
+			var voices = []
+
+			languages.forEach(language => {
+				var _default = false
+				var lang = language
+				var localService = false
+				var name = getName(language)
+				var voiceURI = getName(language)
+				
+				if (language === 'en') var _default = true
+
+				var voice = { default: _default, lang: language, localService: localService, name: name, voiceURI: voiceURI }
+				voices.push(voice)
+			})
 			
-			return languages
+			return voices
 		}
 		
 		
