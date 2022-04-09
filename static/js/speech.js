@@ -1,3 +1,28 @@
+// TODO:
+// Sort default by first
+// AniSpeechUttenrace with pich and vloume
+// Onvoicechange method
+// HARDEST: Add UI
+
+class AniSpeechUtterance {
+	constructor() {
+    this.text = '';
+	this.lang = '';
+	this.voice = null;
+	
+	this.onstart = function() {};
+	this.onend = function() {};
+	this.onpause = function() {};
+	this.onresume = function() {};
+
+	// Not yet implemented
+    this.pitch = -1;
+    this.rate = -1;
+    this.volume = -1;
+	
+  }
+}
+
 class AniSpeechVoice {
   constructor({ _default, language, localService, name, voiceURI }) {
     this.default = _default;
@@ -5,12 +30,14 @@ class AniSpeechVoice {
     this.localService = localService;
     this.name = name;
     this.voiceURI = voiceURI;
+	this.utterance = null;
   }
 }
 
 class AniSpeech {
   constructor(language) {
     this.language = "en";
+	this.voice = new AniSpeechVoice(true, 'en', false, 'Google Speech Online English', 'Google Speech Online English');
     this.languages = {
       af: "Afrikaans",
       ar: "Arabic",
@@ -88,7 +115,7 @@ class AniSpeech {
     this.languages = languages;
 
     return languages;
-  }
+  } 
 
   getName(language) {
     language = this.languages[language];
@@ -124,16 +151,41 @@ class AniSpeech {
     return voices;
   }
 
-  async speak(text) {
+  async speak(utterance) {
     const self = this;
+	
+	if (typeof utterance === 'string') {
+		var text = utterance;
+		utterance = new AniSpeechUtterance;
+		utterance.text = text;
+		
+		utterance.lang = this.language;
+		utterance.voice = this.voice;
+		
+		utterance.pitch = 1;
+		utterance.rate = 1;
+		utterance.volume = 1;
+	}
+
+	this.utterance = utterance;
+	  
+	var speakingLanguage = ''
+	if (utterance.voice) {
+		if (utterance.voice.lang) speakingLanguage = utterance.voice.lang
+	} else if (utterance.language !== '') {
+		speakingLanguage = utterance.lang
+	} else {
+		speakingLanguage = this.voice.lang || this.language
+	}
+	  
     const response = await fetch("/api/v1/speak/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        text: text,
-        language: this.language,
+        text: utterance.text,
+        language: speakingLanguage,
       }),
     });
 
@@ -145,11 +197,12 @@ class AniSpeech {
 
     audio.src = audioUrl;
     audio.play();
-
     this.speaking = true;
+	utterance.onstart();
 
     audio.onended = function () {
       self.speaking = false;
+	  utterance.onend();
     };
 
     return this.audio;
@@ -157,14 +210,17 @@ class AniSpeech {
 
   pause() {
     this.audio.pause();
+	this.utterance.onpause();
   }
 
   resume() {
     this.audio.play();
+	this.utterance.onresume();
   }
 
   cancel() {
     this.audio.pause();
     this.audio.remove();
+	this.utterance.onend();
   }
 }
