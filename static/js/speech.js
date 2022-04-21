@@ -109,7 +109,7 @@ class AniSpeech {
   }
 
   async getLanguages() {
-    var languages = await fetch("/api/v1/languages/");
+    var languages = await fetch("https://texttospeech-api.techwithanirudh.repl.co/api/v1/languages/");
     languages = await languages.json();
 
     this.languages = languages;
@@ -178,7 +178,7 @@ class AniSpeech {
 		speakingLanguage = this.voice.lang || this.language
 	}
 	  
-    const response = await fetch("/api/v1/speak/", {
+    const response = await fetch("https://texttospeech-api.techwithanirudh.repl.co/api/v1/speak/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

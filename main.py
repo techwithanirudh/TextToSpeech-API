@@ -12,9 +12,11 @@ CORS(app)
 
 app.config['CUSTOM_STATIC_PATH'] = './static'
 
-if os.path.isdir('./files'):
-	shutil.rmtree('./files')
-os.mkdir('./files')
+def clean():
+	if os.path.isdir('./files'):
+		shutil.rmtree('./files')
+	os.mkdir('./files')
+clean()
 
 @app.route('/')
 def index():
@@ -40,6 +42,14 @@ def read():
 			return "Language not supported: " + language
 	
 		ttsEngine.save(filename)
+
+		@after_this_request
+		def remove_file(response):
+			try:
+				os.remove(filename)
+			except Exception as error:
+				app.logger.error("Error removing or closing downloaded file handle", error)
+			return response
 
 		return send_file(filename, mimetype='audio/mp3')
 	elif request.method == 'GET':  
